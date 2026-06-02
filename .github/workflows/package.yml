@@ -1,0 +1,90 @@
+name: Package Neonrix
+
+on:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Package Windows EXE
+        shell: cmd
+        run: |
+          mkdir input
+          copy Neonrix.jar input\
+
+          jpackage ^
+            --type exe ^
+            --input input ^
+            --main-jar Neonrix.jar ^
+            --name Neonrix ^
+            --app-version 1.0
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Neonrix-Windows
+          path: "*.exe"
+
+  linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Package Linux DEB
+        run: |
+          mkdir input
+          cp Neonrix.jar input/
+
+          jpackage \
+            --type deb \
+            --input input \
+            --main-jar Neonrix.jar \
+            --name Neonrix \
+            --app-version 1.0
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Neonrix-Linux
+          path: "*.deb"
+
+  macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Package macOS DMG
+        run: |
+          mkdir input
+          cp Neonrix.jar input/
+
+          jpackage \
+            --type dmg \
+            --input input \
+            --main-jar Neonrix.jar \
+            --name Neonrix \
+            --app-version 1.0
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Neonrix-Mac
+          path: "*.dmg"
