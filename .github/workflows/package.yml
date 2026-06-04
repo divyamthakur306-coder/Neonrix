@@ -1,86 +1,180 @@
 name: Package Neonrix
 
+
+
 on:
+
   workflow_dispatch:
 
+
+
 jobs:
+
   windows:
+
     runs-on: windows-latest
+
+
+
     steps:
+
       - uses: actions/checkout@v4
+
+
+
       - uses: actions/setup-java@v4
+
         with:
+
           distribution: temurin
+
           java-version: 17
 
-      - name: Package Windows App
+
+
+      - name: Package Windows EXE
+
         shell: cmd
+
         run: |
+
           mkdir input
+
           copy Neonrix.jar input\
-          # Changed --type to app-image
+
+
+
           jpackage ^
-            --type app-image ^
+
+            --type exe ^
+
             --input input ^
+
             --main-jar Neonrix.jar ^
+
             --name Neonrix ^
+
             --app-version 1.0
 
+
+
       - uses: actions/upload-artifact@v4
+
         with:
-          name: Neonrix-Windows-Portable
-          # jpackage creates a folder named after the --name flag
-          path: Neonrix/
+
+          name: Neonrix-Windows
+
+          path: "*.exe"
+
+
 
   linux:
+
     runs-on: ubuntu-latest
+
+
+
     steps:
+
       - uses: actions/checkout@v4
+
+
+
       - uses: actions/setup-java@v4
+
         with:
+
           distribution: temurin
+
           java-version: 17
 
-      - name: Package Linux App
+
+
+      - name: Package Linux DEB
+
         run: |
+
           mkdir input
+
           cp Neonrix.jar input/
-          # Changed --type to app-image
+
+
+
           jpackage \
-            --type app-image \
+
+            --type deb \
+
             --input input \
+
             --main-jar Neonrix.jar \
+
             --name Neonrix \
+
             --app-version 1.0
 
+
+
       - uses: actions/upload-artifact@v4
+
         with:
-          name: Neonrix-Linux-Portable
-          path: Neonrix/
+
+          name: Neonrix-Linux
+
+          path: "*.deb"
+
+
 
   macos:
+
     runs-on: macos-latest
+
+
+
     steps:
+
       - uses: actions/checkout@v4
+
+
+
       - uses: actions/setup-java@v4
+
         with:
+
           distribution: temurin
+
           java-version: 17
 
-      - name: Package macOS App
+
+
+      - name: Package macOS DMG
+
         run: |
+
           mkdir input
+
           cp Neonrix.jar input/
-          # Changed --type to app-image
+
+
+
           jpackage \
-            --type app-image \
+
+            --type dmg \
+
             --input input \
+
             --main-jar Neonrix.jar \
+
             --name Neonrix \
+
             --app-version 1.0
 
+
+
       - uses: actions/upload-artifact@v4
+
         with:
-          name: Neonrix-Mac-App
-          # macOS app-image creates a "Neonrix.app" bundle
-          path: Neonrix.app/
+
+          name: Neonrix-Mac
+
+          path: "*.dmg" 
+
