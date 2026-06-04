@@ -6,23 +6,21 @@ on:
 jobs:
   windows:
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Package Windows EXE
+      - name: Package Windows App
         shell: cmd
         run: |
           mkdir input
           copy Neonrix.jar input\
-
+          # Changed --type to app-image
           jpackage ^
-            --type exe ^
+            --type app-image ^
             --input input ^
             --main-jar Neonrix.jar ^
             --name Neonrix ^
@@ -30,27 +28,26 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Neonrix-Windows
-          path: "*.exe"
+          name: Neonrix-Windows-Portable
+          # jpackage creates a folder named after the --name flag
+          path: Neonrix/
 
   linux:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Package Linux DEB
+      - name: Package Linux App
         run: |
           mkdir input
           cp Neonrix.jar input/
-
+          # Changed --type to app-image
           jpackage \
-            --type deb \
+            --type app-image \
             --input input \
             --main-jar Neonrix.jar \
             --name Neonrix \
@@ -58,27 +55,25 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Neonrix-Linux
-          path: "*.deb"
+          name: Neonrix-Linux-Portable
+          path: Neonrix/
 
   macos:
     runs-on: macos-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Package macOS DMG
+      - name: Package macOS App
         run: |
           mkdir input
           cp Neonrix.jar input/
-
+          # Changed --type to app-image
           jpackage \
-            --type dmg \
+            --type app-image \
             --input input \
             --main-jar Neonrix.jar \
             --name Neonrix \
@@ -86,5 +81,6 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Neonrix-Mac
-          path: "*.dmg"
+          name: Neonrix-Mac-App
+          # macOS app-image creates a "Neonrix.app" bundle
+          path: Neonrix.app/
